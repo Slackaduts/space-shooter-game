@@ -1,11 +1,13 @@
-use godot::classes::Sprite2D;
-use godot::global::clampf;
+use godot::global::lerp_angle;
+// use godot::classes::Sprite2D;
+// use godot::global::clampf;
 use godot::prelude::*;
 
 use godot::classes::CharacterBody2D;
+// use godot::classes::CollisionShape2D;
 use godot::classes::ICharacterBody2D;
 use godot::classes::Input;
-use godot::global::lerp;
+// use godot::global::view;
 // use godot::classes::CharacterBody2D;
 
 #[derive(GodotClass)]
@@ -39,8 +41,8 @@ impl ICharacterBody2D for Player {
         
         Self {
             speed: 500.0,
-            angular_speed: std::f64::consts::PI * 0.01,
-            acceleration_factor: 0.01,
+            angular_speed: std::f64::consts::TAU,
+            acceleration_factor: 0.05,
             deceleration_factor: 0.98,
             // max_speed: Vector2::new(-1500.0, 1500.0),
 
@@ -62,33 +64,30 @@ impl ICharacterBody2D for Player {
 
         let decel_factor = self.deceleration_factor as f32;
 
-        let new_velocity = (self.base().get_velocity() + steering_force) * decel_factor;
+        let velocity = self.base().get_velocity();
+        let new_velocity = (velocity + steering_force) * decel_factor;
+
+        // Independent rotation, testing with mouse pos lookat
+        if let Some(viewport) = self.base().get_viewport() {
+            let rotation = self.base().get_global_rotation();
+            let mouse_pos = viewport.get_mouse_position();
+
+            let desired_rot = self.base().get_position().angle_to_point(mouse_pos);
+            let actual_rot = lerp_angle(
+            rotation.into(), 
+            desired_rot.into(),
+            self.angular_speed * delta
+            );
+            self.base_mut().set_global_rotation(actual_rot as f32)
+        }
 
         self.base_mut().set_velocity(new_velocity);
-
-        let position = self.base().get_position();
-        let rotation = self.base().get_rotation();
-
-        let desired_rotation: f32 = match position.cross(position + new_velocity).is_sign_negative() {
-            true => {
-                position.angle_to_point(position + new_velocity)
-            },
-            false => {
-                (position + new_velocity).angle_to_point(position)
-            }
-        };
-
-        let actual_rotation = clampf(value, min, max);
-
-
-
-        // self.base_mut().set_rotation(rotation + (actual_rotation * delta as f32));
-
-        self.base_mut().move_and_slide();
-
-
-
+        self.base_mut().move_and_slide();        
     }
+
+    // fn ready(&mut self) {
+    //     let offset = self.base().get_node_as(CharacterShape2D)
+    // }
 }
 
 // #[godot_api]

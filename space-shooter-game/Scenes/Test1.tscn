@@ -3,7 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://btkfnhwv1tytx" path="res://icon.svg" id="1_pn4i3"]
 
 [node name="Player" type="Player"]
+position = Vector2(423, 299)
+motion_mode = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(847, 374)
+rotation = 1.5708
 texture = ExtResource("1_pn4i3")
