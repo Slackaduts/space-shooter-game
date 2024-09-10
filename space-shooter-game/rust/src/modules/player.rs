@@ -62,10 +62,8 @@ impl ICharacterBody2D for Player {
             "ui_down".into()
         ) * speed * self.acceleration_factor as f32;
 
-        let decel_factor = self.deceleration_factor as f32;
-
         let velocity = self.base().get_velocity();
-        let new_velocity = (velocity + steering_force) * decel_factor;
+        let new_velocity = (velocity + steering_force) * self.deceleration_factor as f32;
 
         // Independent rotation, testing with mouse pos lookat
         if let Some(viewport) = self.base().get_viewport() {
