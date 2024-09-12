@@ -1,11 +1,30 @@
-[gd_scene load_steps=2 format=3 uid="uid://cyk7s4u8hdsfi"]
+[gd_scene load_steps=4 format=3 uid="uid://cyk7s4u8hdsfi"]
 
 [ext_resource type="Texture2D" uid="uid://btkfnhwv1tytx" path="res://icon.svg" id="1_pn4i3"]
 
-[node name="Player" type="Player"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_lo13g"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pdara"]
+size = Vector2(56, 56)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(423, 299)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("CircleShape2D_lo13g")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+
+[node name="Player" type="Player" parent="."]
 position = Vector2(423, 299)
 motion_mode = 1
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("RectangleShape2D_pdara")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
 rotation = 1.5708
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_pn4i3")
